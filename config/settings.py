@@ -27,6 +27,10 @@ DEBUG = os.environ.get("DEBUG", "1") == "1"
 
 ALLOWED_HOSTS = ["localhost", "127.0.0.1", "autopay-tracker.onrender.com",]
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://autopay-tracker.onrender.com",
+]
+
 # Application definition
 
 INSTALLED_APPS = [
