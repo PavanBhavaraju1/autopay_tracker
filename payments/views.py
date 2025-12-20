@@ -1,0 +1,90 @@
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
+from .models import Subscription, Card
+from .forms import SubscriptionForm, CardForm
+
+
+def signup(request):
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("login")
+    else:
+        form = UserCreationForm()
+    return render(request, "payments/signup.html", {"form": form})
+
+
+@login_required
+def dashboard(request):
+    auto = Subscription.objects.filter(status="auto")
+    due = Subscription.objects.filter(status="due")
+    paid = Subscription.objects.filter(status="paid")
+    upcoming = Subscription.objects.filter(status="upcoming")
+
+    context = {
+        "auto_list": auto,
+        "due_list": due,
+        "paid_list": paid,
+        "upcoming_list": upcoming,
+    }
+    return render(request, "payments/dashboard.html", context)
+
+
+@login_required
+def add_subscription(request):
+    if request.method == "POST":
+        form = SubscriptionForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("dashboard")
+    else:
+        form = SubscriptionForm()
+
+    has_cards = Card.objects.exists()
+    return render(
+        request,
+        "payments/subscription_form.html",
+        {"form": form, "title": "Add Subscription", "has_cards": has_cards},
+    )
+
+
+@login_required
+def edit_subscription(request, pk):
+    subscription = get_object_or_404(Subscription, pk=pk)
+    if request.method == "POST":
+        form = SubscriptionForm(request.POST, instance=subscription)
+        if form.is_valid():
+            form.save()
+            return redirect("dashboard")
+    else:
+        form = SubscriptionForm(instance=subscription)
+    return render(request, "payments/subscription_form.html", {"form": form, "title": "Edit Subscription"})
+
+
+@login_required
+def delete_subscription(request, pk):
+    subscription = get_object_or_404(Subscription, pk=pk)
+    if request.method == "POST":
+        subscription.delete()
+        return redirect("dashboard")
+    return render(request, "payments/subscription_confirm_delete.html", {"subscription": subscription})
+
+
+@login_required
+def card_list(request):
+    cards = Card.objects.all()
+    return render(request, "payments/card_list.html", {"cards": cards})
+
+
+@login_required
+def add_card(request):
+    if request.method == "POST":
+        form = CardForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("card-list")
+    else:
+        form = CardForm()
+    return render(request, "payments/card_form.html", {"form": form, "title": "Add Card"})

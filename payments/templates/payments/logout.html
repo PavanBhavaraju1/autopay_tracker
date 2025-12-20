@@ -1,0 +1,11 @@
+{% extends "payments/base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6 text-center">
+    <h2>Logged out successfully</h2>
+    <p>Thanks for using AutoPay Tracker!</p>
+    <a href="{% url 'login' %}" class="btn btn-primary">Log back in</a>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,91 @@
+{% extends "payments/base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2>Subscriptions Overview</h2>
+  <div>
+    <a href="{% url 'card-list' %}" class="btn btn-outline-secondary me-2">Manage Cards</a>
+    <a href="{% url 'add-subscription' %}" class="btn btn-success">Add Subscription</a>
+  </div>
+</div>
+
+
+
+<div class="row">
+  <div class="col-md-3">
+    <h4>Auto</h4>
+    <ul class="list-group">
+      {% for sub in auto_list %}
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <span>
+          {{ sub.service_name }} - {{ sub.amount }} ({{ sub.card }})
+        </span>
+        <span>
+          <a href="{% url 'edit-subscription' sub.pk %}" class="btn btn-sm btn-outline-primary me-1">Edit</a>
+          <a href="{% url 'delete-subscription' sub.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+        </span>
+      </li>
+      {% empty %}
+      <li class="list-group-item">No auto payments</li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="col-md-3">
+    <h4>Due</h4>
+    <ul class="list-group">
+      {% for sub in due_list %}
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <span>
+          {{ sub.service_name }} - {{ sub.amount }} ({{ sub.next_billing_date }})
+        </span>
+        <span>
+          <a href="{% url 'edit-subscription' sub.pk %}" class="btn btn-sm btn-outline-primary me-1">Edit</a>
+          <a href="{% url 'delete-subscription' sub.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+        </span>
+      </li>
+      {% empty %}
+      <li class="list-group-item">No due payments</li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="col-md-3">
+    <h4>Paid</h4>
+    <ul class="list-group">
+      {% for sub in paid_list %}
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <span>
+          {{ sub.service_name }} - {{ sub.amount }}
+        </span>
+        <span>
+          <a href="{% url 'edit-subscription' sub.pk %}" class="btn btn-sm btn-outline-primary me-1">Edit</a>
+          <a href="{% url 'delete-subscription' sub.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+        </span>
+      </li>
+      {% empty %}
+      <li class="list-group-item">No paid records</li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="col-md-3">
+    <h4>Upcoming</h4>
+    <ul class="list-group">
+      {% for sub in upcoming_list %}
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <span>
+          {{ sub.service_name }} - {{ sub.amount }} ({{ sub.next_billing_date }})
+        </span>
+        <span>
+          <a href="{% url 'edit-subscription' sub.pk %}" class="btn btn-sm btn-outline-primary me-1">Edit</a>
+          <a href="{% url 'delete-subscription' sub.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+        </span>
+      </li>
+      {% empty %}
+      <li class="list-group-item">No upcoming payments</li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endblock %}

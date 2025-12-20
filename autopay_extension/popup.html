@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { width: 350px; padding: 20px; font-family: system-ui; }
+    input, select { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
+    button { width: 100%; padding: 12px; margin: 5px 0; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; }
+    .save { background: #28a745; color: white; }
+    .cancel { background: #6c757d; color: white; }
+    .status { display: flex; gap: 10px; }
+    .status button { flex: 1; width: auto; padding: 8px 12px; font-size: 14px; }
+    .active { background: #007bff !important; }
+  </style>
+</head>
+<body>
+  <h3>💳 Save AutoPay?</h3>
+  <form id="saveForm">
+    <input type="text" id="service_name" placeholder="Service (e.g. Netflix)" required>
+    <input type="number" id="amount" step="0.01" placeholder="$12.99" required>
+    <input type="text" id="card_name" placeholder="Card (e.g. HDFC Credit)" required>
+    <input type="text" id="card_last4" placeholder="Last 4 (1234)" maxlength="4" required>
+    <input type="date" id="next_billing_date" required>
+    
+    <div class="status">
+      <button type="button" class="status-btn active" data-status="auto">Auto</button>
+      <button type="button" class="status-btn" data-status="upcoming">Upcoming</button>
+      <button type="button" class="status-btn" data-status="due">Due</button>
+    </div>
+    
+    <button type="submit" class="save">Save to AutoPay Tracker</button>
+    <button type="button" class="cancel" id="cancel">Cancel</button>
+  </form>
+  <script src="popup.js"></script>
+</body>
+</html>

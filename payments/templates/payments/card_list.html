@@ -1,0 +1,21 @@
+{% extends "payments/base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2>Cards</h2>
+  <div>
+    <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary me-2">Home</a>
+    <a href="{% url 'add-card' %}" class="btn btn-success">Add Card</a>
+  </div>
+</div>
+
+<ul class="list-group">
+  {% for card in cards %}
+  <li class="list-group-item">
+    {{ card.name }} •••• {{ card.last4 }}{% if not card.is_active %} (inactive){% endif %}
+  </li>
+  {% empty %}
+  <li class="list-group-item">No cards yet. Add one.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

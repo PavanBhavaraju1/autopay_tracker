@@ -1,0 +1,74 @@
+{% extends "payments/base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <h2 class="mb-3">{{ title }}</h2>
+
+    <form method="post">
+      {% csrf_token %}
+
+      <div class="mb-3">
+        <label class="form-label">{{ form.card.label }}</label>
+        <div class="d-flex">
+          {{ form.card }}
+          <a href="{% url 'add-card' %}" class="btn btn-outline-secondary ms-2">
+            Add card
+          </a>
+        </div>
+        {% if form.card.help_text %}
+        <div class="form-text">
+          {{ form.card.help_text }}
+        </div>
+        {% endif %}
+        {% for error in form.card.errors %}
+        <div class="text-danger small">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">{{ form.service_name.label }}</label>
+        {{ form.service_name }}
+        {% for error in form.service_name.errors %}
+        <div class="text-danger small">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">{{ form.amount.label }}</label>
+        {{ form.amount }}
+        {% for error in form.amount.errors %}
+        <div class="text-danger small">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">{{ form.billing_cycle_days.label }}</label>
+        {{ form.billing_cycle_days }}
+        {% for error in form.billing_cycle_days.errors %}
+        <div class="text-danger small">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">{{ form.next_billing_date.label }}</label>
+        {{ form.next_billing_date }}
+        {% for error in form.next_billing_date.errors %}
+        <div class="text-danger small">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">{{ form.status.label }}</label>
+        {{ form.status }}
+        {% for error in form.status.errors %}
+        <div class="text-danger small">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <button type="submit" class="btn btn-primary">Save</button>
+      <a href="{% url 'dashboard' %}" class="btn btn-secondary ms-2">Cancel</a>
+    </form>
+  </div>
+</div>
+{% endblock %}
