@@ -1,0 +1,36 @@
+{% extends "payments/base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <h2 class="mb-3">Install AutoPay Extension</h2>
+
+    <div class="alert alert-info">
+      <p class="mb-1"><strong>Step 1 – Download the extension ZIP</strong></p>
+      <a href="{% url 'extension-download' %}" class="btn btn-success mt-2">
+        ⬇️ Download AutoPay Extension (.zip)
+      </a>
+    </div>
+
+    <h4 class="mt-4 mb-3">Step 2 – Load it in Chrome</h4>
+    <ol>
+      <li>Open Google Chrome.</li>
+      <li>Go to <code>chrome://extensions</code> in the address bar.</li>
+      <li>Turn on <strong>Developer mode</strong> (top‑right corner).</li>
+      <li>Click <strong>“Load unpacked”</strong>.</li>
+      <li>Unzip the downloaded file and select the unzipped <code>autopay_extension</code> folder.</li>
+    </ol>
+
+    <h4 class="mt-4 mb-3">Step 3 – Use it on checkout pages</h4>
+    <ul>
+      <li>Visit a checkout page (Netflix, Amazon, Spotify, etc.).</li>
+      <li>Click the <strong>AutoPay</strong> extension icon.</li>
+      <li>Save the card or subscription to send it to your AutoPay Tracker dashboard.</li>
+    </ul>
+
+    <div class="mt-4">
+      <a href="{% url 'dashboard' %}" class="btn btn-primary">← Back to Dashboard</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
