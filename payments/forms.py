@@ -21,13 +21,15 @@ class SubscriptionForm(forms.ModelForm):
             "status": "Status",
         }
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, user=None, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["card"].empty_label = "Select a card"
         self.fields["card"].help_text = (
-            "Don’t see your card? Click “Add card” to create it, then come back."
+            "Don't see your card? Click 'Add card' to create it, then come back."
         )
-
+        # Filter cards by current user
+        if user:
+            self.fields["card"].queryset = Card.objects.filter(user=user)
 
 class CardForm(forms.ModelForm):
     class Meta:

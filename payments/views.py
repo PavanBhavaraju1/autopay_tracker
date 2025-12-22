@@ -4,7 +4,6 @@ from django.contrib.auth.forms import UserCreationForm
 from .models import Subscription, Card
 from .forms import SubscriptionForm, CardForm
 
-
 def signup(request):
     if request.method == "POST":
         form = UserCreationForm(request.POST)
@@ -14,7 +13,6 @@ def signup(request):
     else:
         form = UserCreationForm()
     return render(request, "payments/signup.html", {"form": form})
-
 
 @login_required
 def dashboard(request):
@@ -31,18 +29,17 @@ def dashboard(request):
     }
     return render(request, "payments/dashboard.html", context)
 
-
 @login_required
 def add_subscription(request):
     if request.method == "POST":
-        form = SubscriptionForm(request.POST)
+        form = SubscriptionForm(request.POST, user=request.user)
         if form.is_valid():
             subscription = form.save(commit=False)
-            subscription.user = request.user          # attach to current user
+            subscription.user = request.user
             subscription.save()
             return redirect("dashboard")
     else:
-        form = SubscriptionForm()
+        form = SubscriptionForm(user=request.user)
 
     has_cards = Card.objects.filter(user=request.user).exists()
     return render(
@@ -51,23 +48,21 @@ def add_subscription(request):
         {"form": form, "title": "Add Subscription", "has_cards": has_cards},
     )
 
-
 @login_required
 def edit_subscription(request, pk):
     subscription = get_object_or_404(Subscription, pk=pk, user=request.user)
     if request.method == "POST":
-        form = SubscriptionForm(request.POST, instance=subscription)
+        form = SubscriptionForm(request.POST, instance=subscription, user=request.user)
         if form.is_valid():
             form.save()
             return redirect("dashboard")
     else:
-        form = SubscriptionForm(instance=subscription)
+        form = SubscriptionForm(instance=subscription, user=request.user)
     return render(
         request,
         "payments/subscription_form.html",
         {"form": form, "title": "Edit Subscription"},
     )
-
 
 @login_required
 def delete_subscription(request, pk):
@@ -81,12 +76,10 @@ def delete_subscription(request, pk):
         {"subscription": subscription},
     )
 
-
 @login_required
 def card_list(request):
     cards = Card.objects.filter(user=request.user)
     return render(request, "payments/card_list.html", {"cards": cards})
-
 
 @login_required
 def add_card(request):
@@ -94,7 +87,7 @@ def add_card(request):
         form = CardForm(request.POST)
         if form.is_valid():
             card = form.save(commit=False)
-            card.user = request.user               # attach to current user
+            card.user = request.user
             card.save()
             return redirect("card-list")
     else:
