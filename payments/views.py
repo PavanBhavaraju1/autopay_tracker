@@ -20,12 +20,14 @@ def dashboard(request):
     due = Subscription.objects.filter(user=request.user, status="due")
     paid = Subscription.objects.filter(user=request.user, status="paid")
     upcoming = Subscription.objects.filter(user=request.user, status="upcoming")
+    cards = Card.objects.filter(user=request.user)
 
     context = {
         "auto_list": auto,
         "due_list": due,
         "paid_list": paid,
         "upcoming_list": upcoming,
+        "cards": cards,
     }
     return render(request, "payments/dashboard.html", context)
 
