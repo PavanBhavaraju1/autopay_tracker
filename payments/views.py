@@ -18,10 +18,10 @@ def signup(request):
 
 @login_required
 def dashboard(request):
-    auto = Subscription.objects.filter(status="auto")
-    due = Subscription.objects.filter(status="due")
-    paid = Subscription.objects.filter(status="paid")
-    upcoming = Subscription.objects.filter(status="upcoming")
+    auto = Subscription.objects.filter(user=request.user, status="auto")
+    due = Subscription.objects.filter(user=request.user, status="due")
+    paid = Subscription.objects.filter(user=request.user, status="paid")
+    upcoming = Subscription.objects.filter(user=request.user, status="upcoming")
 
     context = {
         "auto_list": auto,
@@ -37,12 +37,14 @@ def add_subscription(request):
     if request.method == "POST":
         form = SubscriptionForm(request.POST)
         if form.is_valid():
-            form.save()
+            subscription = form.save(commit=False)
+            subscription.user = request.user          # attach to current user
+            subscription.save()
             return redirect("dashboard")
     else:
         form = SubscriptionForm()
 
-    has_cards = Card.objects.exists()
+    has_cards = Card.objects.filter(user=request.user).exists()
     return render(
         request,
         "payments/subscription_form.html",
@@ -52,7 +54,7 @@ def add_subscription(request):
 
 @login_required
 def edit_subscription(request, pk):
-    subscription = get_object_or_404(Subscription, pk=pk)
+    subscription = get_object_or_404(Subscription, pk=pk, user=request.user)
     if request.method == "POST":
         form = SubscriptionForm(request.POST, instance=subscription)
         if form.is_valid():
@@ -60,21 +62,29 @@ def edit_subscription(request, pk):
             return redirect("dashboard")
     else:
         form = SubscriptionForm(instance=subscription)
-    return render(request, "payments/subscription_form.html", {"form": form, "title": "Edit Subscription"})
+    return render(
+        request,
+        "payments/subscription_form.html",
+        {"form": form, "title": "Edit Subscription"},
+    )
 
 
 @login_required
 def delete_subscription(request, pk):
-    subscription = get_object_or_404(Subscription, pk=pk)
+    subscription = get_object_or_404(Subscription, pk=pk, user=request.user)
     if request.method == "POST":
         subscription.delete()
         return redirect("dashboard")
-    return render(request, "payments/subscription_confirm_delete.html", {"subscription": subscription})
+    return render(
+        request,
+        "payments/subscription_confirm_delete.html",
+        {"subscription": subscription},
+    )
 
 
 @login_required
 def card_list(request):
-    cards = Card.objects.all()
+    cards = Card.objects.filter(user=request.user)
     return render(request, "payments/card_list.html", {"cards": cards})
 
 
@@ -83,8 +93,14 @@ def add_card(request):
     if request.method == "POST":
         form = CardForm(request.POST)
         if form.is_valid():
-            form.save()
+            card = form.save(commit=False)
+            card.user = request.user               # attach to current user
+            card.save()
             return redirect("card-list")
     else:
         form = CardForm()
-    return render(request, "payments/card_form.html", {"form": form, "title": "Add Card"})
+    return render(
+        request,
+        "payments/card_form.html",
+        {"form": form, "title": "Add Card"},
+    )

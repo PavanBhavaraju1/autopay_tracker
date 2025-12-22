@@ -1,6 +1,12 @@
+from django.conf import settings
 from django.db import models
 
 class Card(models.Model):
+    user = models.ForeignKey(
+    settings.AUTH_USER_MODEL,
+    on_delete=models.CASCADE,
+    related_name="cards",
+    )
     name = models.CharField(max_length=100)  # e.g. HDFC Credit Card
     last4 = models.CharField(max_length=4)
     issuer = models.CharField(max_length=50, blank=True)  # e.g. Visa
@@ -11,6 +17,11 @@ class Card(models.Model):
 
 
 class Subscription(models.Model):
+    user = models.ForeignKey(
+    settings.AUTH_USER_MODEL,
+    on_delete=models.CASCADE,
+    related_name="subscriptions",
+    )
     STATUS_CHOICES = [
         ("auto", "Auto"),
         ("due", "Due"),
